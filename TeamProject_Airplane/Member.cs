@@ -311,6 +311,7 @@ namespace TeamProject_Airplane
                 }
 
                 this.Point -= (int)mile;
+                
 
                 int tempcount = 1;
                 foreach (var item in ReservationInfos[reservedNo].reservationInfoDetail)
@@ -322,8 +323,7 @@ namespace TeamProject_Airplane
                 ReservationInfos.Remove(reservedNo);
 
                 alert($"[알림][ 예매번호 {reservedNo}의 모든 예매가 취소되었습니다");
-                
-                
+
                 this.purchaseCount -= tempcount;
                 changeRank();
 

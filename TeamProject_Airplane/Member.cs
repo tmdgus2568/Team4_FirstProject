@@ -337,7 +337,7 @@ namespace TeamProject_Airplane
                                 matchEtaHour = itemHour.ToString();
                             }
 
-                            if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && j.ToString() == matchEtaHour)
+                            if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && string.Format("{0:D2}", j) == matchEtaHour)
                             {
                                 Console.Write($"비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  티켓 가격:{item.Value.PriceInfo}");
                             }

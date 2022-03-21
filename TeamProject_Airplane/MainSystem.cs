@@ -17,21 +17,15 @@ namespace TeamProject_Airplane
         private Dictionary<string, Manager> managers;
         private Dictionary<string, ReservationInfo> reservationInfos;
         private Dictionary<string, AirplaneSchedule> airplaneSchedules;
-        //private List<Captain> captainList;
         private List<ReservationInfoDetail> reservationInfoDetails;
-        //private ArrayList totalList;
 
         public MainSystem()
         {
             this.loadAirplaneSchedule();
-            //this.loadCatainInfo();
             this.loadReservationInfoDetail();
             this.loadReservationInfo();
-
             this.loadManagerlist();
-            this.loadMemberlist();
-            
-            
+            this.loadMemberlist();         
             this.display();
 
         }
@@ -45,25 +39,25 @@ namespace TeamProject_Airplane
                 Console.WriteLine("=====================================\n");
                 Console.WriteLine("원하시는 서비스를 선택해 주세요.\n");
                 Console.WriteLine("1. 로그인 2. 비회원 3. 회원가입 0. 프로그램 종료");
-                int input = Int32.Parse(Console.ReadLine());
+                string input = Console.ReadLine();
 
                 switch (input)
                 {
-                    case 1:
+                    case "1":
                         this.login();
                         break;
-                    case 2:
+                    case "2":
                         this.selectNonmembermenu();
                         break;
-                    case 3:
+                    case "3":
                         this.signUp();
                         break;
-                    case 0:
+                    case "0":
                         Console.WriteLine("이용해 주셔서 감사합니다.(__)");
                         return;
                     default:
                         Console.WriteLine("잘못 입력하셨습니다.");
-                        return;
+                        break;
                 }
             }
         }
@@ -101,7 +95,6 @@ namespace TeamProject_Airplane
             else //아이디가 없을 경우
             {
                 Console.WriteLine("[알림] 아이디가 존재하지 않습니다. 메인화면으로 돌아갑니다.");
-                //this.display();
             }
 
         }
@@ -114,30 +107,30 @@ namespace TeamProject_Airplane
             Console.WriteLine($"원하시는 업무를 선택해 주세요.");
             Console.WriteLine($"1. 비행 일정표 확인\t2. 운행 일정 생성\t3. 운행 일정 수정\n");
             Console.WriteLine($"4. 운행 일정 삭제\t5. 항공기상정보 확인\t0. 프로그램 종료");
-            int input = Int32.Parse(Console.ReadLine());
+            string input = Console.ReadLine();
             switch (input)
             {
-                case 1:
+                case "1":
                     manager.checkSchedule();
                     this.selectManagermenu(id);
                     break;
-                case 2:
+                case "2":
                     manager.addSchedule();
                     this.selectManagermenu(id);
                     break;
-                case 3:
+                case "3":
                     manager.editSchedule();
                     this.selectManagermenu(id);
                     break;
-                case 4:
+                case "4":
                     manager.deleteSchedule();
                     this.selectManagermenu(id);
                     break;
-                case 5:
+                case "5":
                     manager.checkAviationWeatherService();
                     this.selectManagermenu(id);
                     break;
-                case 0:
+                case "0":
                     Console.WriteLine("감사합니다. 안녕히가십시오(__)");
 
                     //업무 관련 정보 저장..@@
@@ -158,101 +151,93 @@ namespace TeamProject_Airplane
         {
             Member member = this.members[id];
             //회원 메뉴판 출력..
-
             Console.WriteLine($"원하시는 업무를 선택해 주세요.");
             Console.WriteLine($"1. 예매   2. 예매확인 3. 예매변경\n");
             Console.WriteLine($"4. 예매 취소    5. 운행일정 확인  0. 프로그램 종료");
-            int input = 0;
-            while ((input = Int32.Parse(Console.ReadLine())) != 0)
+
+            string input = Console.ReadLine();
+            switch (input)
             {
-                switch (input)
-                {
-                    case 1:
-                        member.addReservation();
-                        break;
-                    case 2:
-                        member.checkReservation(null);
-                        break;
-                    case 3:
-                        member.editReservation(null);
-                        break;
-                    case 4:
-                        member.cancelReservation(null);
-                        break;
-                    case 5:
-                        this.checkSchedule();
-                        break;
-                    default:
-                        Console.WriteLine("잘못 선택하셨습니다.");
-                        break;
-                }
+                case "1":
+                    member.addReservation();
+                    this.selectMembermenu(id);
+                    break;
+                case "2":
+                    member.checkReservation(null);
+                    this.selectMembermenu(id);
+                    break;
+                case "3":
+                    member.editReservation(null);
+                    this.selectMembermenu(id);
+                    break;
+                case "4":
+                    member.cancelReservation(null);
+                    this.selectMembermenu(id);
+                    break;
+                case "5":
+                    this.checkSchedule();
+                    this.selectMembermenu(id);
+                    break;
+                case "0":
+                    Console.WriteLine("감사합니다. 안녕히가십시오(__)");
+                    //업무 관련 정보 저장
+                    this.saveAirplaneSchedule();
+                    this.saveReservationInfo();
+                    this.saveMemberlist();
+                    //this.saveReservationInfoDetail();
+                    break;
+                default:
+                    Console.WriteLine("잘못 선택하셨습니다.");
+                    break;
             }
-            Console.WriteLine("감사합니다. 안녕히가십시오(__)");
-
-            //업무 관련 정보 저장
-            this.saveAirplaneSchedule();
-            this.saveReservationInfo();
-            this.saveMemberlist();
-            //this.saveReservationInfoDetail();
-
         }
 
 
         private void selectNonmembermenu()
         {
+            NonMember nonMember = new NonMember(this.reservationInfos, this.airplaneSchedules);
             Console.WriteLine($"원하시는 업무를 선택해 주세요.");
             Console.WriteLine($"1. 예매 \t2. 예매확인\t3. 예매변경\n");
             Console.WriteLine($"4. 예매 취소\t5. 운행일정 확인    0. 프로그램 종료");
-            string input;
+            string input = Console.ReadLine();
             string reservationNo;
-
-            NonMember nonMember = new NonMember(this.reservationInfos, this.airplaneSchedules);
-
-            while ((input = Console.ReadLine()) != "0")
+            switch (input)
             {
-                switch (input)
-                {
-                    case "1": //운행스케줄 번호를 넣으면 어떤 검증절차로 원하는 운행스케줄을 가져오는지..?
-                        //Console.Write("원하시는 일정의 비행기번호를 입력해 주세요 : ");
-                        //string airplaneNo = Console.ReadLine();
-                        nonMember.addReservation();
-                        
-                       // if (this.airplaneSchedules.ContainsKey(airplaneNo))
-                        //{
-                            //nonMember.addReservation();
-                            //전체 운행스케줄 + 예약정보 전체를 넘겨줌(dictionary
-                        //}
-                        //else
-                        //{
-                           // Console.WriteLine("[알림] 없는 번호입니다.");
-                        //}
-                        break;
-                    case "2":
-                        reservationNo = checkReservationNo();
-                        nonMember.checkReservation(reservationNo);
-
-                        break;
-                    case "3":
-                        reservationNo = checkReservationNo();
-                        nonMember.editReservation(reservationNo);
-                        break;
-
-                    case "4":
-                        reservationNo = checkReservationNo();
-                        nonMember.cancelReservation(reservationNo);
-                        break;
-                    case "5":
-                        this.checkSchedule();
-                        break;
-                    default:
-                        Console.WriteLine("[알림] 잘못 선택하셨습니다.");
-                        break;
-                }
+                case "1":
+                    nonMember.addReservation();
+                    this.selectNonmembermenu();
+                    break;
+                case "2":
+                    reservationNo = checkReservationNo();
+                    nonMember.checkReservation(reservationNo);
+                    this.selectNonmembermenu();
+                    break;
+                case "3":
+                    reservationNo = checkReservationNo();
+                    nonMember.editReservation(reservationNo);
+                    this.selectNonmembermenu();
+                    break;
+                case "4":
+                    reservationNo = checkReservationNo();
+                    nonMember.cancelReservation(reservationNo);
+                    this.selectNonmembermenu();
+                    break;
+                case "5":
+                    this.checkSchedule();
+                    this.selectNonmembermenu();
+                    break;
+                case "0":
+                    Console.WriteLine("감사합니다. 안녕히가십시오(__)");
+                    this.saveAirplaneSchedule();
+                    this.saveReservationInfo();
+                    this.saveReservationInfoDetail();
+                    break;
+                default:
+                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
+                    this.selectNonmembermenu();
+                    break;
             }
-            Console.WriteLine("감사합니다. 안녕히가십시오(__)");
-            this.saveAirplaneSchedule();
-            this.saveReservationInfo();
-            this.saveReservationInfoDetail();
+            
         }
 
 
@@ -463,23 +448,6 @@ namespace TeamProject_Airplane
 
         }
 
-        /*
-        public void showAirplaneSchedule()//운행일정 출력함수   //임시로
-        {
-            Console.WriteLine("========================================================");
-            Console.WriteLine("출발날짜     출발지     목적지      운항편명       가격");
-            Console.WriteLine("========================================================");
-            //날짜별 정렬?
-            foreach (var item in airplaneSchedules.Values)
-            {
-                
-                Console.WriteLine($"{item.TakeOffTime}      {item.DeparturePoint}       {item.DestinationPoint}     {item.AirplanceNo}      {item.PriceInfo}");
-
-            }
-
-
-        }
-        */
 
         //회원
         private void saveMemberlist()
@@ -545,14 +513,12 @@ namespace TeamProject_Airplane
                 {
                     BinaryFormatter bf = new BinaryFormatter();
                     this.managers = (Dictionary<string, Manager>)bf.Deserialize(managerList);
-                    Console.WriteLine(this.airplaneSchedules.Count);
                 }
             }
             else
             {
                 this.managers = new Dictionary<string, Manager>();
                 this.managers.Add("admin", new Manager("admin", "1234", this.airplaneSchedules, this.reservationInfos));
-                Console.WriteLine(this.airplaneSchedules.Count);
             }
         }
 
@@ -662,7 +628,6 @@ namespace TeamProject_Airplane
                     
                     BinaryFormatter bf = new BinaryFormatter();
                     this.airplaneSchedules = (Dictionary<string, AirplaneSchedule>)bf.Deserialize(ScheduleList);
-                    Console.WriteLine(airplaneSchedules.Count);
                 }
             }
             else

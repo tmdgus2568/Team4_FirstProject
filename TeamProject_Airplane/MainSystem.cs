@@ -33,10 +33,10 @@ namespace TeamProject_Airplane
         {
             while (true)
             {
-                Console.WriteLine("저희 항공사를 이용해주셔서 감사합니다.");
+                Console.WriteLine("\n[알림] 저희 항공사를 이용해주셔서 감사합니다.");
                 Console.WriteLine("=====================================\n");
-                Console.WriteLine("원하시는 서비스를 선택해 주세요.\n");
-                Console.WriteLine("1. 로그인 2. 비회원 3. 회원가입 0. 프로그램 종료");
+                Console.WriteLine("[알림] 원하시는 서비스를 선택해 주세요.\n");
+                Console.Write("1. 로그인 2. 비회원 3. 회원가입 0. 프로그램 종료 : ");
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -51,10 +51,10 @@ namespace TeamProject_Airplane
                         this.signUp();
                         break;
                     case "0":
-                        Console.WriteLine("이용해 주셔서 감사합니다.(__)");
+                        Console.WriteLine("[알림] 이용해 주셔서 감사합니다.(__)");
                         return;
                     default:
-                        Console.WriteLine("잘못 입력하셨습니다.");
+                        Console.WriteLine("[알림] 잘못 입력하셨습니다.");
                         break;
                 }
             }
@@ -73,7 +73,7 @@ namespace TeamProject_Airplane
             {
                 if (this.managers[id].Password == password) //id, 로그인 일치 시..
                 {
-                    Console.WriteLine($"반갑습니다. 관리자 {id}님 ^^");
+                    Console.WriteLine($"[알림] 반갑습니다. 관리자 {id}님 ^^");
                     this.managers[id].airplaneSchedules = this.airplaneSchedules; //객체주소 동기화
                     this.managers[id].reservationInfos = this.reservationInfos;
                     this.selectManagermenu(id);
@@ -83,7 +83,7 @@ namespace TeamProject_Airplane
             {
                 if (this.members[id].Password == password)
                 {
-                    Console.WriteLine($"반갑습니다. 회원 {id}님 ^^");
+                    Console.WriteLine($"[알림] 반갑습니다. 회원 {id}님 ^^");
                     this.members[id].AirplaneSchedules = this.airplaneSchedules;//객체주소 동기화
                     this.members[id].ReservationInfos = this.reservationInfos;//객체주소 동기화
                     this.selectMembermenu(id);
@@ -102,9 +102,9 @@ namespace TeamProject_Airplane
         {
             Manager manager = this.managers[id];
 
-            Console.WriteLine($"원하시는 업무를 선택해 주세요.");
-            Console.WriteLine($"1. 비행 일정표 확인\t2. 운행 일정 생성\t3. 운행 일정 수정\n");
-            Console.WriteLine($"4. 운행 일정 삭제\t5. 항공기상정보 확인\t0. 프로그램 종료");
+            Console.WriteLine($"[알림] 원하시는 업무를 선택해 주세요.");
+            Console.Write($"1. 비행 일정표 확인\t2. 운행 일정 생성\t3. 운행 일정 수정\t4. 운행 일정 삭제\t5. 항공기상정보 확인\t0. 프로그램 종료 : ");
+
             string input = Console.ReadLine();
             switch (input)
             {
@@ -129,7 +129,7 @@ namespace TeamProject_Airplane
                     this.selectManagermenu(id);
                     break;
                 case "0":
-                    Console.WriteLine("감사합니다. 안녕히가십시오(__)");
+                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
 
                     //업무 관련 정보 저장..@@
                     this.saveAirplaneSchedule();
@@ -137,7 +137,7 @@ namespace TeamProject_Airplane
                     //this.saveCatainInfo();
                     return;
                 default:
-                    Console.WriteLine("잘못 선택하셨습니다.");
+                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
                     this.selectManagermenu(id); //재귀
                     break;
 
@@ -150,8 +150,7 @@ namespace TeamProject_Airplane
             Member member = this.members[id];
             //회원 메뉴판 출력..
             Console.WriteLine($"원하시는 업무를 선택해 주세요.");
-            Console.WriteLine($"1. 예매   2. 예매확인 3. 예매변경\n");
-            Console.WriteLine($"4. 예매 취소    5. 운행일정 확인  0. 프로그램 종료");
+            Console.Write($"1. 예매\t2. 예매확인\t3. 예매변경\t4. 예매 취소\t5. 운행일정 확인\t0. 프로그램 종료 : ");
 
             string input = Console.ReadLine();
             switch (input)
@@ -177,14 +176,14 @@ namespace TeamProject_Airplane
                     this.selectMembermenu(id);
                     break;
                 case "0":
-                    Console.WriteLine("감사합니다. 안녕히가십시오(__)");
+                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
                     //업무 관련 정보 저장
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
                     this.saveMemberlist();
                     break;
                 default:
-                    Console.WriteLine("잘못 선택하셨습니다.");
+                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
                     break;
             }
         }
@@ -194,8 +193,8 @@ namespace TeamProject_Airplane
         {
             NonMember nonMember = new NonMember(this.reservationInfos, this.airplaneSchedules);
             Console.WriteLine($"원하시는 업무를 선택해 주세요.");
-            Console.WriteLine($"1. 예매 \t2. 예매확인\t3. 예매변경\n");
-            Console.WriteLine($"4. 예매 취소\t5. 운행일정 확인    0. 프로그램 종료");
+            Console.Write($"1. 예매 \t2. 예매확인\t3. 예매변경\t4. 예매 취소\t5. 운행일정 확인\t0. 프로그램 종료");
+
             string input = Console.ReadLine();
             string reservationNo;
             switch (input)
@@ -224,7 +223,7 @@ namespace TeamProject_Airplane
                     this.selectNonmembermenu();
                     break;
                 case "0":
-                    Console.WriteLine("감사합니다. 안녕히가십시오(__)");
+                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
                     break;
@@ -308,8 +307,8 @@ namespace TeamProject_Airplane
 
             this.saveMemberlist(); //유저리스트 최신화
 
-            Console.WriteLine("가입을 축하드립니다 ^^");
-            Console.WriteLine("가입 기념으로 포인트 5000을 적립해 드렸습니다. 현재 등급은 '{0}'입니다.", member.MemberRating);
+            Console.WriteLine("[알림] 가입을 축하드립니다 ^^");
+            Console.WriteLine("[알림] 가입 기념으로 포인트 5000을 적립해 드렸습니다. 현재 등급은 '{0}'입니다.", member.MemberRating);
         }
 
 

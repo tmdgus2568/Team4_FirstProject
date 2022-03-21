@@ -296,7 +296,6 @@ namespace TeamProject_Airplane
 
         public void checkAviationWeatherService() // 항공기상정보 제공 [완성]
         {
-            string secretKey = "fhSf0OPlDfcp2a8jLno%2Fr2ELNfHzy9rRhJrRQG%2FLupeeboQaKuRZTg9vwROTa6%2F70GSwkTbCsbch50aPdThmPA%3D%3D";
             string icao = "RKSI";
             string dataType = "JSON";
             string numOfRows = "10";
@@ -387,7 +386,7 @@ namespace TeamProject_Airplane
         {
             string lat = "37.4692"; // 위도
             string lon = "126.451"; // 경도
-            string secretKey = "95f674e375b3ef829bca744220138ea5";
+        
             string exclude = "minutely"; // 받지 않을 조건
             string unit = "metric"; // metric은 섭씨, 풍속(미터/초) imperial은 화씨, 마일/시간
             string openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=" + exclude + "&units=" + unit + "&appid=" + secretKey; // openweather one call api 

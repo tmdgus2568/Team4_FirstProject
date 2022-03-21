@@ -17,12 +17,10 @@ namespace TeamProject_Airplane
         private Dictionary<string, Manager> managers;
         private Dictionary<string, ReservationInfo> reservationInfos;
         private Dictionary<string, AirplaneSchedule> airplaneSchedules;
-        private List<ReservationInfoDetail> reservationInfoDetails;
 
         public MainSystem()
         {
             this.loadAirplaneSchedule();
-            this.loadReservationInfoDetail();
             this.loadReservationInfo();
             this.loadManagerlist();
             this.loadMemberlist();         
@@ -184,7 +182,6 @@ namespace TeamProject_Airplane
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
                     this.saveMemberlist();
-                    //this.saveReservationInfoDetail();
                     break;
                 default:
                     Console.WriteLine("잘못 선택하셨습니다.");
@@ -230,7 +227,6 @@ namespace TeamProject_Airplane
                     Console.WriteLine("감사합니다. 안녕히가십시오(__)");
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
-                    this.saveReservationInfoDetail();
                     break;
                 default:
                     Console.WriteLine("[알림] 잘못 선택하셨습니다.");
@@ -558,49 +554,6 @@ namespace TeamProject_Airplane
         }
 
 
-        //비회원
-        //private
-        private void saveReservationInfoDetail()
-        {
-            if (File.Exists(@"Reservations\reservation_info_detail.txt"))
-            {
-                using (Stream reservationDeatailList = new FileStream(@"Reservations\reservation_info_detail.txt", FileMode.OpenOrCreate))
-                {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    bf.Serialize(reservationDeatailList, this.reservationInfoDetails);
-                }
-            }
-            else
-            {
-                if(Directory.Exists(@"Reservations"))
-                {
-                    this.saveReservationInfo();
-                }
-                else
-                {
-                    Directory.CreateDirectory(@"Reservations");
-                    this.saveReservationInfo();
-                }
-
-            }
-        }
-
-
-        private void loadReservationInfoDetail()
-        {
-            if (File.Exists(@"Reservations\reservation_info_detail.txt"))
-            {
-                using (Stream reservationDeatailList = new FileStream(@"Reservations\reservation_info_detail.txt", FileMode.Open))
-                {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    this.reservationInfoDetails = (List<ReservationInfoDetail>)bf.Deserialize(reservationDeatailList);
-                }
-            }
-            else
-            {
-                this.reservationInfoDetails = new List<ReservationInfoDetail>();
-            }
-        }
         private void saveAirplaneSchedule()
         {
             if (Directory.Exists(@"AirplaneSchedule"))

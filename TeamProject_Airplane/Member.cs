@@ -65,17 +65,33 @@ namespace TeamProject_Airplane
 
             //예약하고 싶은 자리 수
             Console.WriteLine("예약할 자리 수를 입력해주세요");
-            int count = int.Parse(Console.ReadLine());
+
+            string scount = Console.ReadLine();
+            Regex regscount = new Regex(@"^\d$");
+            if (!regscount.IsMatch(scount))
+            {
+                Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                return;
+            }
+            int count = int.Parse(scount);
+
 
             //예약하고 싶은 좌석들 입력받음 // 일단 여러명 기준으로 생각
             //예매상세정보 생성
             List<string[]> seatWantList = new List<string[]>(); // 예약하고 싶은 좌석들 담을거
 
+            Console.WriteLine("여러개의 자리를 예약하실 경우 제일 처음입력하는 자리가 대표회원님의 자리가 됩니다.");
             for (int i = 0; i < count; i++)
             {
                 Console.WriteLine("예약할 자리위치를 입력해주세요.");
-                Console.WriteLine("여러개의 자리를 예약하실 경우 제일 처음입력하는 자리가 대표회원님의 자리가 됩니다.");
                 string[] seatNoWantToReserve = (Console.ReadLine()).Split('-'); // 좌석값 입력값 담을 통
+                Regex regseat1 = new Regex(@"[1-30]");
+                Regex regseat2 = new Regex(@"[1-6]");
+                if (!(seatNoWantToReserve.Length == 2 && regseat1.IsMatch(seatNoWantToReserve[0]) && regseat2.IsMatch(seatNoWantToReserve[1])))
+                {
+                    Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                    return;
+                }
 
                 if (AirplaneSchedules[wantThisSchedule].SeatList[int.Parse((seatNoWantToReserve[0])) - 1, int.Parse(seatNoWantToReserve[1]) - 1] == 1) //? +1 또는 -1해야될수도있음
                 {
@@ -166,13 +182,36 @@ namespace TeamProject_Airplane
                 //예매한 내역 출력
                 printReservationInfoDetail(reservedNo);
 
-                Console.WriteLine("변경하고 싶은 사람은 몇 명입니까?"); int count = int.Parse(Console.ReadLine());
-                Console.WriteLine("변경하고 싶은 사람의 여권번호를 입력해주세요");
+                Console.WriteLine("변경하고 싶은 사람은 몇 명입니까?");
+                Console.WriteLine($"총 인원수 : {ReservationInfos[reservedNo].reservationInfoDetail.Count}");
+                string scount = Console.ReadLine();
+                Regex regscount = new Regex(@"^\d$");//int count = int.Parse(scount);
+                if (!(regscount.IsMatch(scount) && int.Parse(scount) >= 1 && int.Parse(scount) <= (ReservationInfos[reservedNo].reservationInfoDetail.Count)))
+                {
+                    Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                    return;
+                }
+                int count = int.Parse(scount);
+
+                Console.WriteLine("변경하고 싶은 사람(들)의 여권번호를 입력해주세요");
                 List<string> changelist = new List<string>();
                 for (int i = 0; i < count; i++)
                 {
                     Console.WriteLine("입력");
                     string temp = Console.ReadLine();
+
+                    int tempcount = 1;
+                    foreach (var item in ReservationInfos[reservedNo].reservationInfoDetail)
+                    {
+                        if (item.PassportNo != temp)
+                        { tempcount++; }
+                    }
+                    if (tempcount > ReservationInfos[reservedNo].reservationInfoDetail.Count)
+                    {
+                        Console.WriteLine("해당되는 여권번호가 없습니다. 메뉴로 돌아갑니다");
+                        return;
+                    }
+
                     changelist.Add(temp);
                 }
 
@@ -186,7 +225,13 @@ namespace TeamProject_Airplane
                     Console.WriteLine($"변경할 사람의 여권번호 : {item}");
                     Console.WriteLine("바꿀 좌석을 고르세요");
                     string[] input = Console.ReadLine().Split('-');
-
+                    Regex regseat1 = new Regex(@"[1-30]");
+                    Regex regseat2 = new Regex(@"[1-6]");
+                    if (!(input.Length == 2 && regseat1.IsMatch(input[0]) && regseat2.IsMatch(input[1])))
+                    {
+                        Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                        return;
+                    }
 
                     //여기수정
                     if (AirplaneSchedules[ReservationInfos[reservedNo].airplaneSchedule.AirplanceNo].SeatList[int.Parse(input[0]) - 1, int.Parse(input[1]) - 1] == 1)

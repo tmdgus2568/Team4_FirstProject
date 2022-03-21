@@ -158,7 +158,7 @@ namespace TeamProject_Airplane
             }
 
             this.Point += (int)mile;
-            ++this.purchaseCount;
+            this.purchaseCount += count;
             changeRank();
         }
 
@@ -311,16 +311,22 @@ namespace TeamProject_Airplane
                 }
 
                 this.Point -= (int)mile;
-                --this.purchaseCount;
-                changeRank();
 
+                int tempcount = 1;
                 foreach (var item in ReservationInfos[reservedNo].reservationInfoDetail)
                 {
                     string[] idx = item.SeatNo.Split('-');
                     AirplaneSchedules[ReservationInfos[reservedNo].airplaneSchedule.AirplanceNo].SeatList[int.Parse(idx[0]) - 1, int.Parse(idx[1]) - 1] = 0;
+                    tempcount++;
                 }
                 ReservationInfos.Remove(reservedNo);
+
                 alert($"[알림][ 예매번호 {reservedNo}의 모든 예매가 취소되었습니다");
+                
+                
+                this.purchaseCount -= tempcount;
+                changeRank();
+
             }
 
 

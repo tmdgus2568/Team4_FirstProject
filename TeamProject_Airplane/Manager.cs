@@ -49,14 +49,24 @@ namespace TeamProject_Airplane
             this.windDegDaily = new List<string>(); // 일자별 돌풍
 
         }
-
-
-        public void checkSchedule() // 비행기 일정표 확인  [미완성]
-        {   //문제 1. 지난 날짜는 삭제되어야함.............
-            weatherInfo();
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("###############################################현재 비행기 일정###############################################");
+        private void alert(string str)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n" + str);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+        private void adminAlert(string str)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n" + str);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+
+        public void checkSchedule() // 비행기 일정표 확인  
+        {   
+            weatherInfo();
+            adminAlert("##########################################################################################################현재 비행기 일정##########################################################################################################\n");
             Regex regDay = new Regex(@"(\d\d)-(\d\d)-(\d\d)");
             Regex regHour = new Regex(@"(\d\d)$");
             MatchCollection resultDay;
@@ -73,7 +83,7 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]     날씨정보:{weatherDaily[i]}    돌풍 지수:{windDegDaily[i]}    자외선 지수:{uviDaily[i]}###########################\n\n\n");
+                    Console.WriteLine($"#################################################################     [날짜 : {DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]     (날씨 : {weatherDaily[i]}    돌풍 지수 : {windDegDaily[i]}    자외선 지수 : {uviDaily[i]})#################################################################\n\n\n");
                     for (int j = 0; j < 24; j++) // 시간 출력
                     {
                         try
@@ -86,7 +96,7 @@ namespace TeamProject_Airplane
                             if (string.Format("{0:D2}", j) == matchEtaWeatherHour && weatherHourCount < 47)
                             {
                                 weatherHourCount++;
-                                Console.Write($"{string.Format("{0:D2}", j)}시 (날씨 정보:{weatherHourly[j]} 돌풍 지수: {windDegHourly[j]} 가시성: {visibilityHourly[j]}): ");
+                                Console.Write($"{string.Format("{0:D2}", j)}시 (날씨 :{weatherHourly[j]} 돌풍 지수: {windDegHourly[j]} 가시성: {visibilityHourly[j]}): ");
                                 if (int.Parse(matchEtaWeatherHour) == 23)
                                 {
                                     weatherDayCount++;
@@ -108,7 +118,7 @@ namespace TeamProject_Airplane
 
                             if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && string.Format("{0:D2}", j) == matchEtaHour)
                             {
-                                Console.Write($"//비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  기준가격:{item.Value.PriceInfo}  기장:{item.Value.CaptainInfo.Name}  부기장:{item.Value.CoCaptainInfo.Name}//");
+                                Console.Write($"[++++비행기 번호 : {item.Value.AirplanceNo}  출발예정시간 : {item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간 : {item.Value.TakeOffTime}  목적지 : {item.Value.DestinationPoint}  기준가격 : {item.Value.PriceInfo}  기장 : {item.Value.CaptainInfo.Name}  부기장 : {item.Value.CoCaptainInfo.Name}++++]\n");
                             }
                         }
                         Console.WriteLine("\n");
@@ -119,7 +129,7 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]     날씨정보:{weatherDaily[i]}    돌풍 지수:{windDegDaily[i]}    자외선 지수:{uviDaily[i]}###########################\n\n\n");
+                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]     날씨:{weatherDaily[i]}    돌풍 지수:{windDegDaily[i]}    자외선 지수:{uviDaily[i]}###########################\n\n\n");
                     for (int j = 0; j <= 24; j++) // 시간 출력
                     {
                         Console.WriteLine($"{string.Format("{0:D2}", j)}시:     \n\n");
@@ -133,33 +143,31 @@ namespace TeamProject_Airplane
         public void addSchedule() // 비행기 일정 추가  [완성]
         {
             AirplaneSchedule airplaneSchedule = new AirplaneSchedule();
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("###############################################비행기 일정 추가###############################################");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("비행기 번호를 입력해 주세요.:");
+            adminAlert("########################################################################################################[비행기 일정 추가]########################################################################################################");
+            Console.Write("비행기 번호를 입력해 주세요. : ");
             string airplanceNo = Console.ReadLine();
 
             if (!this.airplaneSchedules.ContainsKey(airplanceNo))
             {
-                Console.Write("이륙 시간을 입력해 주세요.(ex 22-03-19.15): ");
+                Console.Write("이륙 시간을 입력해 주세요.( ex 22-03-19.15 ) : ");
                 string takeOffTime = Console.ReadLine();
-                Console.Write("도착 예정 시간을 입력해 주세요.(ex 22-03-19.15):");
+                Console.Write("도착 예정 시간을 입력해 주세요.( ex 22-03-19.15 ) : ");
                 string eta = Console.ReadLine();
-                Console.Write("목적지를 입력해 주세요.:");
+                Console.Write("목적지를 입력해 주세요. : ");
                 string destinationPoint = Console.ReadLine();
-                Console.Write("기장 이름을 입력해주세요.:");
+                Console.Write("기장 이름을 입력해주세요. : ");
                 string captainName = Console.ReadLine();
-                Console.Write("기장 휴대폰 번호를 입력해주세요.(ex 010-1111-1111): ");
+                Console.Write("기장 휴대폰 번호를 입력해주세요.( - 기호 없이 입력 ) : ");
                 string captainPhoneNo = Console.ReadLine();
                 Console.Write("기장 메일을 입력해주세요.:");
                 string captainEmail = Console.ReadLine();
                 Console.Write("부기장 이름을 입력해주세요.:");
                 string cCaptainName = Console.ReadLine();
-                Console.Write("부기장 휴대폰 번호를 입력해주세요.(ex 010-1111-1111): ");
+                Console.Write("부기장 휴대폰 번호를 입력해주세요.( - 기호 없이 입력 ) : ");
                 string cCaptainPhoneNo = Console.ReadLine();
-                Console.Write("부기장 메일을 입력해주세요.:");
+                Console.Write("부기장 메일을 입력해주세요. : ");
                 string cCaptainEmail = Console.ReadLine();
-                Console.Write("기반이 되는 가격을 입력해주세요.:"); // 이유 기반이 되는 가격을 정해야 퍼스트 비즈니스 등의 가격이 측정된다
+                Console.Write("기반이 되는 가격을 입력해주세요. : "); // 이유 기반이 되는 가격을 정해야 퍼스트 비즈니스 등의 가격이 측정된다
                 int priceInfo = int.Parse(Console.ReadLine());
                 this.airplaneSchedules.Add(airplanceNo, new AirplaneSchedule(airplanceNo, takeOffTime, eta, destinationPoint,
                                       new Captain(true, captainName, captainPhoneNo, captainEmail),
@@ -167,7 +175,7 @@ namespace TeamProject_Airplane
             }
             else
             {
-                Console.WriteLine("이미 배치되어 있는 비행기입니다.");
+                alert("[알림] 이미 배치되어 있는 비행기입니다.");
             }
         }
 
@@ -175,14 +183,11 @@ namespace TeamProject_Airplane
         public void editSchedule() // 비행기 일정표 변경  [완성] //음.. 변경이 어떤 ... 기장과 부기장 정도밖에 없는데..
         {
             //일정표 한번 출력
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("###############################################비행기 일정 변경###############################################");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            Console.Write("변경하실 비행기 번호를 입력해주세요.:");
+            adminAlert("########################################################################################################[비행기 일정 변경]########################################################################################################");
+            Console.Write("변경하실 비행기 번호를 입력해주세요.: ");
             string editTargetNo = Console.ReadLine();
             string captainTarget;
-            string captainName = "d";
+            string captainName = "";
             string captainPhoneNo = "";
             string captainEmail = "";
             string cCaptainName = "";
@@ -196,25 +201,25 @@ namespace TeamProject_Airplane
                 while (whileJug)
                 {
                     Console.WriteLine("변경하고 싶은 메뉴를 선택해주세요.");
-                    Console.Write("1. 기장 2. 부기장 3. 변경모드 종료");
+                    Console.Write("1. 기장 2. 부기장 3. 종료 : ");
                     captainTarget = Console.ReadLine();
                     switch (captainTarget)
                     {
                         case "1":
-                            Console.Write("기장 이름을 입력해주세요.:");
+                            Console.Write("기장 이름을 입력해주세요. : ");
                             captainName = Console.ReadLine();
-                            Console.Write("기장 휴대폰 번호를 입력해주세요.(ex 010-1111-1111): ");
+                            Console.Write("기장 휴대폰 번호를 입력해주세요.( - 기호 없이 입력 ) : ");
                             captainPhoneNo = Console.ReadLine();
-                            Console.Write("기장 메일을 입력해주세요.:");
+                            Console.Write("기장 메일을 입력해주세요. : ");
                             captainEmail = Console.ReadLine();
                             targetIsCaptain = true;
                             break;
                         case "2":
-                            Console.Write("부기장 이름을 입력해주세요.:");
+                            Console.Write("부기장 이름을 입력해주세요. : ");
                             cCaptainName = Console.ReadLine();
-                            Console.Write("부기장 휴대폰 번호를 입력해주세요.(ex 010-1111-1111): ");
+                            Console.Write("부기장 휴대폰 번호를 입력해주세요.( - 기호 없이 입력 ) : ");
                             cCaptainPhoneNo = Console.ReadLine();
-                            Console.Write("부기장 메일을 입력해주세요.:");
+                            Console.Write("부기장 메일을 입력해주세요. : ");
                             cCaptainEmail = Console.ReadLine();
                             targetIsCcaptain = true;
                             break;
@@ -222,7 +227,7 @@ namespace TeamProject_Airplane
                             whileJug = false;
                             break;
                         default:
-                            Console.WriteLine("잘못된 입력입니다.");
+                            alert("[알림] 잘못된 입력입니다.");
                             break;
                     }
 
@@ -257,7 +262,7 @@ namespace TeamProject_Airplane
             }
             else
             {
-                Console.WriteLine("해당하는 비행기 번호는 존재하지 않습니다.");
+                alert("[알림] 해당된 비행기 번호는 존재하지 않습니다.");
             }
 
         }
@@ -266,17 +271,13 @@ namespace TeamProject_Airplane
         public void deleteSchedule() // 비행기 일정 삭제 [완성]
         {
             //일정표 한번 출력
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("###############################################비행기 일정 삭제###############################################");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            Console.Write("삭제하실 비행기 번호를 입력해주세요.:");
+            adminAlert("#########################################################################################################[비행기 일정 삭제]#########################################################################################################");
+            Console.Write("삭제하실 비행기 번호를 입력해주세요. : ");
             string deleteTarget = Console.ReadLine(); //airplaneNo
-                                                      // string airplaneNo = this.reservationInfos[deleteTarget]
 
             if (this.airplaneSchedules.ContainsKey(deleteTarget))
             {
-                Console.Write("해당 비행기 일정이 삭제되었습니다.");
+                alert("[알림] 해당 비행기 일정이 삭제되었습니다.");
 
                 foreach (var item in this.reservationInfos.Values.ToList())
                 {
@@ -289,7 +290,7 @@ namespace TeamProject_Airplane
             }
             else
             {
-                Console.Write("해당하는 비행기 번호는 존재하지 않습니다.");
+                alert("[알림] 해당된 비행기 번호는 존재하지 않습니다.");
             }
         }
 
@@ -354,9 +355,7 @@ namespace TeamProject_Airplane
             }
 
             //display
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("###############################################AviationWeatherService###############################################");
-            Console.ForegroundColor = ConsoleColor.White;
+            adminAlert("######################################################################################################AviationWeatherService######################################################################################################\n\n");
             Console.WriteLine($"#현재 인천공항의 METAR/SPECI CODE: {metarMessage}\n");
             Console.WriteLine($"#현재 인천공항의 TAF CODE: {tafMessage}\n");
             Console.WriteLine($"#현재 전국의 WARNING CODE:\n");
@@ -372,12 +371,9 @@ namespace TeamProject_Airplane
             }
             else
             {
-                Console.WriteLine("현재 경보 없음");
+                Console.WriteLine("현재 경보 없음\n\n");
             }
-            Console.ForegroundColor = ConsoleColor.Red;// red로 변경
-            Console.WriteLine("####################################################################################################################");
-            Console.ForegroundColor = ConsoleColor.White;
-
+            adminAlert("####################################################################################################################################################################################################################################\n\n");
 
         }
 
@@ -386,7 +382,7 @@ namespace TeamProject_Airplane
         {
             string lat = "37.4692"; // 위도
             string lon = "126.451"; // 경도
-        
+         
             string exclude = "minutely"; // 받지 않을 조건
             string unit = "metric"; // metric은 섭씨, 풍속(미터/초) imperial은 화씨, 마일/시간
             string openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=" + exclude + "&units=" + unit + "&appid=" + secretKey; // openweather one call api 
@@ -424,7 +420,7 @@ namespace TeamProject_Airplane
             }
             catch (Exception e)
             {
-                Console.WriteLine("다음에 시도해주세요.");
+                alert("[알림] 다음에 시도해주세요.");
             }
         }
     }

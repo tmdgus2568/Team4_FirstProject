@@ -28,15 +28,24 @@ namespace TeamProject_Airplane
 
         }
 
+        private void alert(string str)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n" + str);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
 
         private void display() //생성시 시작함수
         {
             while (true)
             {
-                Console.WriteLine("\n[알림] 저희 항공사를 이용해주셔서 감사합니다.");
-                Console.WriteLine("=====================================\n");
-                Console.WriteLine("[알림] 원하시는 서비스를 선택해 주세요.\n");
-                Console.Write("1. 로그인 2. 비회원 3. 회원가입 0. 프로그램 종료 : ");
+                
+                alert("[알림] 저희 항공사를 이용해주셔서 감사합니다.");
+                
+                Console.WriteLine("==============================================\n");
+                alert("[알림] 원하시는 서비스를 선택해 주세요.\n");
+                Console.Write("1. 로그인\t2. 비회원\t3. 회원가입\t0. 프로그램 종료 : ");
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -51,10 +60,10 @@ namespace TeamProject_Airplane
                         this.signUp();
                         break;
                     case "0":
-                        Console.WriteLine("[알림] 이용해 주셔서 감사합니다.(__)");
+                        alert("[알림] 이용해 주셔서 감사합니다.(__)");
                         return;
                     default:
-                        Console.WriteLine("[알림] 잘못 입력하셨습니다.");
+                        alert("[알림] 잘못 입력하셨습니다.");
                         break;
                 }
             }
@@ -73,7 +82,7 @@ namespace TeamProject_Airplane
             {
                 if (this.managers[id].Password == password) //id, 로그인 일치 시..
                 {
-                    Console.WriteLine($"[알림] 반갑습니다. 관리자 {id}님 ^^");
+                    alert($"[알림] 반갑습니다. 관리자 {id}님 ^^");
                     this.managers[id].airplaneSchedules = this.airplaneSchedules; //객체주소 동기화
                     this.managers[id].reservationInfos = this.reservationInfos;
                     this.selectManagermenu(id);
@@ -83,7 +92,7 @@ namespace TeamProject_Airplane
             {
                 if (this.members[id].Password == password)
                 {
-                    Console.WriteLine($"[알림] 반갑습니다. 회원 {id}님 ^^");
+                    alert($"[알림] 반갑습니다. 회원 {id}님 ^^");
                     this.members[id].AirplaneSchedules = this.airplaneSchedules;//객체주소 동기화
                     this.members[id].ReservationInfos = this.reservationInfos;//객체주소 동기화
                     this.selectMembermenu(id);
@@ -92,7 +101,7 @@ namespace TeamProject_Airplane
             }
             else //아이디가 없을 경우
             {
-                Console.WriteLine("[알림] 아이디가 존재하지 않습니다. 메인화면으로 돌아갑니다.");
+                alert("[알림] 아이디가 존재하지 않습니다. 메인화면으로 돌아갑니다.");
             }
 
         }
@@ -102,7 +111,7 @@ namespace TeamProject_Airplane
         {
             Manager manager = this.managers[id];
 
-            Console.WriteLine($"[알림] 원하시는 업무를 선택해 주세요.");
+            alert($"[알림] 원하시는 업무를 선택해 주세요.");
             Console.Write($"1. 비행 일정표 확인\t2. 운행 일정 생성\t3. 운행 일정 수정\t4. 운행 일정 삭제\t5. 항공기상정보 확인\t0. 프로그램 종료 : ");
 
             string input = Console.ReadLine();
@@ -129,7 +138,7 @@ namespace TeamProject_Airplane
                     this.selectManagermenu(id);
                     break;
                 case "0":
-                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
+                    alert("[알림] 감사합니다. 안녕히가십시오(__)");
 
                     //업무 관련 정보 저장..@@
                     this.saveAirplaneSchedule();
@@ -137,7 +146,7 @@ namespace TeamProject_Airplane
                     //this.saveCatainInfo();
                     return;
                 default:
-                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
+                    alert("[알림] 잘못 선택하셨습니다.");
                     this.selectManagermenu(id); //재귀
                     break;
 
@@ -149,7 +158,7 @@ namespace TeamProject_Airplane
         {
             Member member = this.members[id];
             //회원 메뉴판 출력..
-            Console.WriteLine($"원하시는 업무를 선택해 주세요.");
+            alert($"[알림] 원하시는 업무를 선택해 주세요.");
             Console.Write($"1. 예매\t2. 예매확인\t3. 예매변경\t4. 예매 취소\t5. 운행일정 확인\t0. 프로그램 종료 : ");
 
             string input = Console.ReadLine();
@@ -176,14 +185,14 @@ namespace TeamProject_Airplane
                     this.selectMembermenu(id);
                     break;
                 case "0":
-                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
+                    alert("[알림] 감사합니다. 안녕히가십시오(__)");
                     //업무 관련 정보 저장
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
                     this.saveMemberlist();
                     break;
                 default:
-                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
+                    alert("[알림] 잘못 선택하셨습니다.");
                     break;
             }
         }
@@ -192,8 +201,8 @@ namespace TeamProject_Airplane
         private void selectNonmembermenu()
         {
             NonMember nonMember = new NonMember(this.reservationInfos, this.airplaneSchedules);
-            Console.WriteLine($"원하시는 업무를 선택해 주세요.");
-            Console.Write($"1. 예매 \t2. 예매확인\t3. 예매변경\t4. 예매 취소\t5. 운행일정 확인\t0. 프로그램 종료");
+            alert($"[알림] 원하시는 업무를 선택해 주세요.");
+            Console.Write($"1. 예매 \t2. 예매확인\t3. 예매변경\t4. 예매 취소\t5. 운행일정 확인\t0. 프로그램 종료 : ");
 
             string input = Console.ReadLine();
             string reservationNo;
@@ -223,12 +232,12 @@ namespace TeamProject_Airplane
                     this.selectNonmembermenu();
                     break;
                 case "0":
-                    Console.WriteLine("[알림] 감사합니다. 안녕히가십시오(__)");
+                    alert("[알림] 감사합니다. 안녕히가십시오(__)");
                     this.saveAirplaneSchedule();
                     this.saveReservationInfo();
                     break;
                 default:
-                    Console.WriteLine("[알림] 잘못 선택하셨습니다.");
+                    alert("[알림] 잘못 선택하셨습니다.");
                     this.selectNonmembermenu();
                     break;
             }
@@ -242,9 +251,9 @@ namespace TeamProject_Airplane
             return Console.ReadLine();
         }
 
-                public void checkSchedule() // 비행기 일정표 확인 (고객용)
+        public void checkSchedule() // 비행기 일정표 확인 (고객용)
         {
-            Console.WriteLine("###############################################현재 비행기 일정###############################################");
+            Console.WriteLine("######################################################################################################[현재 비행기 일정]###########################################################################################################\n\n\n");
             Regex regDay = new Regex(@"(\d\d)-(\d\d)-(\d\d)");
             Regex regHour = new Regex(@"(\d\d)$");
             MatchCollection resultDay;
@@ -256,10 +265,10 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]###########################\n\n\n");
+                    Console.WriteLine($"######################################################################################################[날짜 : {DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]#############################################################################################################\n\n\n");
                     for (int j = 0; j <= 24; j++) // 시간 출력
                     {
-                        Console.Write($"{string.Format("{0:D2}", j)}시:     ");
+                       
                         foreach (var item in this.airplaneSchedules)
                         {
                             resultDay = regDay.Matches(item.Value.TakeOffTime);
@@ -276,10 +285,12 @@ namespace TeamProject_Airplane
 
                             if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && j.ToString() == matchEtaHour)
                             {
-                                Console.Write($"비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  티켓 가격:{item.Value.PriceInfo}");
+                                Console.Write("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                                Console.Write($"{string.Format("{0:D2}", j)}시행:     비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  티켓 가격:{item.Value.PriceInfo}\n");
+                                Console.Write("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                             }
                         }
-                        Console.WriteLine("\n");
+                        
                     }
                 }
             }
@@ -287,14 +298,12 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]###########################\n\n\n");
+                    Console.WriteLine($"######################################################################################################[날짜 : {DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]#############################################################################################################\n\n");
                     for (int j = 0; j <= 24; j++) // 시간 출력
                     {
-                        Console.WriteLine($"{string.Format("{0:D2}", j)}시:     \n\n");
                     }
                 }
             }
-
         }
 
 
@@ -307,8 +316,8 @@ namespace TeamProject_Airplane
 
             this.saveMemberlist(); //유저리스트 최신화
 
-            Console.WriteLine("[알림] 가입을 축하드립니다 ^^");
-            Console.WriteLine("[알림] 가입 기념으로 포인트 5000을 적립해 드렸습니다. 현재 등급은 '{0}'입니다.", member.MemberRating);
+            alert("[알림] 가입을 축하드립니다 ^^");
+            alert($"[알림] 가입 기념으로 포인트 5000을 적립해 드렸습니다. 현재 등급은 '{member.MemberRating}'입니다.");
         }
 
 
@@ -319,13 +328,13 @@ namespace TeamProject_Airplane
 
             while (true)
             {
-                Console.WriteLine("ID를 입력해 주세요^^");
+                Console.Write("ID를 입력해 주세요 : ");
                 id = Console.ReadLine();
                 if (!(members.ContainsKey(id)))
                 {
                     if (idRegex.IsMatch(id))
                     {
-                        Console.WriteLine("아이디 재확인\n한 번 더 입력해 주세요^^");
+                        Console.Write("아이디를 한 번 더 입력해 주세요 : ");
 
                         string checkID_str = Console.ReadLine();
                         if (id == checkID_str)
@@ -334,17 +343,17 @@ namespace TeamProject_Airplane
                         }
                         else
                         {
-                            Console.WriteLine("아이디가 일치하지 않습니다!");
+                            alert("[알림] 아이디가 일치하지 않습니다!");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("5~20자의 영문 소문자, 숫자와 특수기호 (_)(-)만 사용가능합니다.");
+                        alert("[알림] 5~20자의 영문 소문자, 숫자와 특수기호 (_)(-)만 사용가능합니다.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("이미 사용중인 아이디입니다.");
+                    alert("[알림] 이미 사용중인 아이디입니다.");
                 }
             }
         }
@@ -357,12 +366,12 @@ namespace TeamProject_Airplane
 
             while (true)
             {
-                Console.WriteLine("비밀번호를 입력해 주세요.");
+                Console.Write("비밀번호를 입력해 주세요 : ");
                 password = Console.ReadLine();
 
                 if (pwRegex.IsMatch(password)) //패스워드 일치 시
                 {
-                    Console.WriteLine("비밀번호 재확인\n한 번 더 입력해 주세요^^");
+                    Console.Write("비밀번호를 한 번 더 입력해 주세요 : ");
 
                     string checkPassword_str = Console.ReadLine();
                     if (password == checkPassword_str)
@@ -372,12 +381,12 @@ namespace TeamProject_Airplane
                     }
                     else
                     {
-                        Console.WriteLine("비밀번호가 일치하지 않습니다!");
+                        alert("[알림] 비밀번호가 일치하지 않습니다!");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.");
+                    alert("[알림] 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.");
                 }
             }
         }
@@ -399,22 +408,22 @@ namespace TeamProject_Airplane
 
             while (true)
             {
-                Console.WriteLine("여권 번호를 알려주세요.");
+                Console.Write("여권 번호를 입력해 주세요 : ");
                 Console.WriteLine("ex)M 12345678");
                 passportNo = Console.ReadLine();
 
                 if (passportRegex.IsMatch(passportNo))
                 {
-                    Console.WriteLine("이름을 알려주세요.");
+                    Console.Write("이름을 알려주세요 : ");
                     name = Console.ReadLine();
 
-                    Console.WriteLine("연락처를 알려주세요.\n(-)기호 없이 입력");
+                    Console.Write("연락처를 입력해 주세요((-)기호 없이 입력) : ");
 
                     phoneNo = Console.ReadLine();
 
                     if (phoneRegex.IsMatch(phoneNo))
                     {
-                        Console.WriteLine("이메일을 알려주세요.");
+                        Console.Write("이메일을 입력해 주세요 : ");
                         email = Console.ReadLine();
 
                         if (emailRegex.IsMatch(email))
@@ -427,17 +436,17 @@ namespace TeamProject_Airplane
                         }
                         else
                         {
-                            Console.WriteLine("올바른 이메일을 입력하세요");
+                            alert("[알림] 올바른 이메일을 입력하세요");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("올바른 연락처를 입력하세요");
+                        alert("[알림] 올바른 연락처를 입력하세요");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("올바른 여권번호를 입력하세요.");
+                    alert("[알림] 올바른 여권번호를 입력하세요.");
                 }
             }
 

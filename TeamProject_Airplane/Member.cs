@@ -47,16 +47,24 @@ namespace TeamProject_Airplane
 
         }
 
+        private void alert(string str)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n" + str);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         public void addReservation()
         {
             //비행기 먼저 골라야됨
-            Console.WriteLine("현재 비행기 일정 목록");
+            alert("[알림] 현재 비행기 일정 목록");
             checkSchedule();
-            Console.WriteLine("원하는 비행일정의 비행기넘버를 입력해주세요"); string wantThisSchedule = Console.ReadLine();
+            Console.Write("원하는 비행일정의 비행기넘버를 입력해주세요 : "); 
+            string wantThisSchedule = Console.ReadLine();
             //그런비행기가 있는지 검색
             if (!AirplaneSchedules.ContainsKey(wantThisSchedule))
             {
-                Console.WriteLine("그런 비행기 엄슴. 메인메뉴로 돌아갑니다.");
+                alert("[알림] 해당 비행기넘버를 가진 일정은 없습니다");
                 return;
             }
 
@@ -66,13 +74,13 @@ namespace TeamProject_Airplane
             //while문 써서 반복돌리고 종료로 빠져나가기 만들어야됨?
 
             //예약하고 싶은 자리 수
-            Console.WriteLine("예약할 자리 수를 입력해주세요");
+            Console.Write("인원수를 선택해 주세요 : ");
 
             string scount = Console.ReadLine();
             Regex regscount = new Regex(@"^\d$");
             if (!regscount.IsMatch(scount))
             {
-                Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                alert("[알림] 잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
                 return;
             }
             int count = int.Parse(scount);
@@ -82,22 +90,22 @@ namespace TeamProject_Airplane
             //예매상세정보 생성
             List<string[]> seatWantList = new List<string[]>(); // 예약하고 싶은 좌석들 담을거
 
-            Console.WriteLine("여러개의 자리를 예약하실 경우 제일 처음입력하는 자리가 대표회원님의 자리가 됩니다.");
+            alert("[알림] 여러개의 자리를 예약하실 경우 제일 처음입력하는 자리가 대표회원님의 자리가 됩니다.");
             for (int i = 0; i < count; i++)
             {
-                Console.WriteLine("예약할 자리위치를 입력해주세요.");
+                Console.Write("예약할 자리위치를 입력해주세요 : ");
                 string[] seatNoWantToReserve = (Console.ReadLine()).Split('-'); // 좌석값 입력값 담을 통
                 Regex regseat1 = new Regex(@"[1-30]");
                 Regex regseat2 = new Regex(@"[1-6]");
                 if (!(seatNoWantToReserve.Length == 2 && regseat1.IsMatch(seatNoWantToReserve[0]) && regseat2.IsMatch(seatNoWantToReserve[1])))
                 {
-                    Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                    alert("[알림] 알맞은 형태로 입력해 주세요(예 : 1-1)");
                     return;
                 }
 
                 if (AirplaneSchedules[wantThisSchedule].SeatList[int.Parse((seatNoWantToReserve[0])) - 1, int.Parse(seatNoWantToReserve[1]) - 1] == 1) //? +1 또는 -1해야될수도있음
                 {
-                    Console.WriteLine("이미 예약됨");
+                    alert("[알림] 이미 예매된 좌석입니다");
                     return;
                 }
                 seatWantList.Add(seatNoWantToReserve); // 이상없는 자리니 담아줌
@@ -118,10 +126,10 @@ namespace TeamProject_Airplane
             //나머지 사람들
             for (int i = 1; i < count; i++)
             {
-                Console.WriteLine($"{seatWantList[i][0]}-{seatWantList[i][1]}의 자리를 입력해주세요");
-                Console.WriteLine("여권번호를 입력해주세요"); string passport = Console.ReadLine();
-                Console.WriteLine("이름을 입력해주세요"); string name = Console.ReadLine();
-                Console.WriteLine("전화번호를 입력해주세요"); string phoneNo = Console.ReadLine();
+                Console.Write($"{seatWantList[i][0]}-{seatWantList[i][1]}좌석의 정보를 입력받습니다 : ");
+                Console.Write("여권번호(예 : M 12345678) : "); string passport = Console.ReadLine();
+                Console.Write("이름 : "); string name = Console.ReadLine();
+                Console.Write("휴대폰번호( - 기호 없이 입력) : "); string phoneNo = Console.ReadLine();
 
                 ReservationInfos[reservedNumber].reservationInfoDetail.Add(new ReservationInfoDetail(passport, name, phoneNo, seatWantList[i][0] + "-" + seatWantList[i][1]));
                 AirplaneSchedules[wantThisSchedule].SeatList[int.Parse(seatWantList[i][0]) - 1, int.Parse(seatWantList[i][1]) - 1] = 1;
@@ -129,7 +137,7 @@ namespace TeamProject_Airplane
 
 
             //예약완료 후 내역 출력
-            Console.WriteLine("예매과정이 완료되었습니다.");
+            alert("[알림] 예매를 완료하였습니다");
             printReservationInfoDetail(reservedNumber);
             Console.WriteLine($"예매번호 : {reservedNumber}");
 
@@ -157,10 +165,10 @@ namespace TeamProject_Airplane
 
         public void checkReservation(string reservationNo) // 예매번호로 내역 출력
         {
-            Console.WriteLine("예매번호를 입력해주세요"); string input = Console.ReadLine();
+            Console.Write("예매 번호를 입력해 주세요 : "); string input = Console.ReadLine();
             if (!ReservationInfos.ContainsKey(input))
             {
-                Console.WriteLine("입력된 예매번호가 없습니다.");
+                alert("[알림] 해당 예매번호로 예매가 되어있지 않습니다");
                 return;
 
             }
@@ -174,10 +182,10 @@ namespace TeamProject_Airplane
 
         public void editReservation(string reservationNo)
         {
-            Console.WriteLine("예매번호를 입력해주세요"); string reservedNo = Console.ReadLine();
+            Console.WriteLine("예매 번호를 입력해 주세요"); string reservedNo = Console.ReadLine();
             if (!ReservationInfos.ContainsKey(reservedNo))
             {
-                Console.WriteLine("입력된 예매번호가 없습니다.");
+                alert("[알림] 해당 예매번호로 예매가 되어있지 않습니다");
                 return;
 
             }
@@ -186,18 +194,18 @@ namespace TeamProject_Airplane
                 //예매한 내역 출력
                 printReservationInfoDetail(reservedNo);
 
-                Console.WriteLine("변경하고 싶은 사람은 몇 명입니까?");
-                Console.WriteLine($"총 인원수 : {ReservationInfos[reservedNo].reservationInfoDetail.Count}");
+                Console.Write($"변경할 인원 수(총 인원수 : {ReservationInfos[reservedNo].reservationInfoDetail.Count}) : ");
+              
                 string scount = Console.ReadLine();
                 Regex regscount = new Regex(@"^\d$");//int count = int.Parse(scount);
                 if (!(regscount.IsMatch(scount) && int.Parse(scount) >= 1 && int.Parse(scount) <= (ReservationInfos[reservedNo].reservationInfoDetail.Count)))
                 {
-                    Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                    alert("[알림] 잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
                     return;
                 }
                 int count = int.Parse(scount);
 
-                Console.WriteLine("변경하고 싶은 사람(들)의 여권번호를 입력해주세요");
+                Console.Write("변경하고 싶은 사람(들)의 여권번호를 입력해주세요 : ");
                 List<string> changelist = new List<string>();
                 for (int i = 0; i < count; i++)
                 {
@@ -212,7 +220,7 @@ namespace TeamProject_Airplane
                     }
                     if (tempcount > ReservationInfos[reservedNo].reservationInfoDetail.Count)
                     {
-                        Console.WriteLine("해당되는 여권번호가 없습니다. 메뉴로 돌아갑니다");
+                        alert("[알림] 해당되는 여권번호가 없습니다. 메뉴로 돌아갑니다");
                         return;
                     }
 
@@ -226,21 +234,21 @@ namespace TeamProject_Airplane
 
                 foreach (var item in changelist)//여권번호 들어잇는
                 {
-                    Console.WriteLine($"변경할 사람의 여권번호 : {item}");
-                    Console.WriteLine("바꿀 좌석을 고르세요");
+                    alert($"[알림] 변경할 사람의 여권번호 : {item}");
+                    Console.Write("바꿀 좌석을 고르세요 : ");
                     string[] input = Console.ReadLine().Split('-');
                     Regex regseat1 = new Regex(@"[1-30]");
                     Regex regseat2 = new Regex(@"[1-6]");
                     if (!(input.Length == 2 && regseat1.IsMatch(input[0]) && regseat2.IsMatch(input[1])))
                     {
-                        Console.WriteLine("잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
+                        alert("[알림] 잘못된 입력입니다. 회원메뉴로 돌아갑니다.");
                         return;
                     }
 
                     //여기수정
                     if (AirplaneSchedules[ReservationInfos[reservedNo].airplaneSchedule.AirplanceNo].SeatList[int.Parse(input[0]) - 1, int.Parse(input[1]) - 1] == 1)
                     {
-                        Console.WriteLine("이 자리는 비어있지 않습니다.");
+                        alert("[알림] 이미 예매된 좌석입니다");
                         return;
                     }
 
@@ -277,10 +285,10 @@ namespace TeamProject_Airplane
 
         public void cancelReservation(string reservationNo)
         {
-            Console.WriteLine("예매번호를 입력해주세요"); string reservedNo = Console.ReadLine();
+            Console.Write("예매 번호를 입력해 주세요 : "); string reservedNo = Console.ReadLine();
             if (!ReservationInfos.ContainsKey(reservedNo))
             {
-                Console.WriteLine("입력된 예매번호가 없습니다.");
+                alert("[알림] 해당 예매번호로 예매가 되어있지 않습니다");
                 return;
 
             }
@@ -312,7 +320,7 @@ namespace TeamProject_Airplane
                     AirplaneSchedules[ReservationInfos[reservedNo].airplaneSchedule.AirplanceNo].SeatList[int.Parse(idx[0]) - 1, int.Parse(idx[1]) - 1] = 0;
                 }
                 ReservationInfos.Remove(reservedNo);
-                Console.WriteLine($"예매번호 {reservedNo}의 모든 예매가 취소되었습니다.");
+                alert($"[알림][ 예매번호 {reservedNo}의 모든 예매가 취소되었습니다");
             }
 
 
@@ -320,6 +328,7 @@ namespace TeamProject_Airplane
 
         public void printReservationInfoDetail(string input) // 보조용. 여러 군데서 쓰는 예매내역 출력 
         {
+            
             if (ReservationInfos[input].member != null)
                 Console.WriteLine($"해당 예매번호 대표자 : {ReservationInfos[input].member.Name}");
             else
@@ -350,14 +359,23 @@ namespace TeamProject_Airplane
                 for (int j = 0; j < seatList.GetLength(1); j++)
                 {
                     var item = seatList[i, j];
-                    Console.Write(item != 0 ? "[매진]\t" : $"[{i + 1}-{j + 1}]\t");
+                    if(j == seatList.GetLength(1)/2) Console.Write("\t");
+                    if(item != 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[매진]\t");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                    }
+                    else Console.Write($"[{i + 1}-{j + 1}]\t");
+                    
                 }
                 Console.WriteLine();
             }
         }
-        public void checkSchedule() // 비행기 일정표 확인 (고객용)
+       public void checkSchedule() // 비행기 일정표 확인 (고객용)
         {
-            Console.WriteLine("###############################################현재 비행기 일정###############################################");
+            Console.WriteLine("######################################################################################################[현재 비행기 일정]###########################################################################################################\n\n\n");
             Regex regDay = new Regex(@"(\d\d)-(\d\d)-(\d\d)");
             Regex regHour = new Regex(@"(\d\d)$");
             MatchCollection resultDay;
@@ -369,10 +387,10 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]###########################\n\n\n");
+                    Console.WriteLine($"######################################################################################################[날짜 : {DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]#############################################################################################################\n\n\n");
                     for (int j = 0; j <= 24; j++) // 시간 출력
                     {
-                        Console.Write($"{string.Format("{0:D2}", j)}시:     ");
+                       
                         foreach (var item in this.AirplaneSchedules)
                         {
                             resultDay = regDay.Matches(item.Value.TakeOffTime);
@@ -389,10 +407,12 @@ namespace TeamProject_Airplane
 
                             if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && j.ToString() == matchEtaHour)
                             {
-                                Console.Write($"비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  티켓 가격:{item.Value.PriceInfo}");
+                                Console.Write("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                                Console.Write($"{string.Format("{0:D2}", j)}시행:     비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  티켓 가격:{item.Value.PriceInfo}\n");
+                                Console.Write("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                             }
                         }
-                        Console.WriteLine("\n");
+                        
                     }
                 }
             }
@@ -400,14 +420,12 @@ namespace TeamProject_Airplane
             {
                 for (int i = 0; i < 7; i++) // 현재 시간으로부터 7일 더하고 list에 add
                 {
-                    Console.WriteLine($"###########################[{DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]###########################\n\n\n");
+                    Console.WriteLine($"######################################################################################################[날짜 : {DateTime.Now.AddDays(i).ToString("yy/MM/dd")}]#############################################################################################################\n\n");
                     for (int j = 0; j <= 24; j++) // 시간 출력
                     {
-                        Console.WriteLine($"{string.Format("{0:D2}", j)}시:     \n\n");
                     }
                 }
             }
-
         }
         private void changeRank()
         {
@@ -441,7 +459,7 @@ namespace TeamProject_Airplane
             }
             if (temp != this.MemberRating)
             {
-                Console.WriteLine($"등급이 {this.MemberRating}로 되었습니다.");
+                alert($"[알림] 등급이 {this.MemberRating}로 되었습니다.");
             }
         }
 

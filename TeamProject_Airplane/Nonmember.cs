@@ -74,9 +74,9 @@ namespace TeamProject_Airplane
                 {
                     int peopleNum_int = int.Parse(peopleNum_str);
 
-                    if (peopleNum_int == 0)
+                    if (peopleNum_int <= 0 && peopleNum_int > 180)
                     {
-                        Console.WriteLine("[알림] 1 이상 2입력해 주세요");
+                        Console.WriteLine("[알림] 인원수가 범위를 넘어갔습니다");
                         continue;
                     }
                     // 인원수만큼 while문

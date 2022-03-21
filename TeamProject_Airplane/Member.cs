@@ -119,9 +119,9 @@ namespace TeamProject_Airplane
             for (int i = 1; i < count; i++)
             {
                 Console.WriteLine($"{seatWantList[i][0]}-{seatWantList[i][1]}의 자리를 입력해주세요");
-                Console.WriteLine("추가인원의 여권번호를 입력해주세요"); string passport = Console.ReadLine();
-                Console.WriteLine("추가인원의 이름을 입력해주세요"); string name = Console.ReadLine();
-                Console.WriteLine("추가인원의 전화번호를 입력해주세요"); string phoneNo = Console.ReadLine();
+                Console.WriteLine("여권번호를 입력해주세요"); string passport = Console.ReadLine();
+                Console.WriteLine("이름을 입력해주세요"); string name = Console.ReadLine();
+                Console.WriteLine("전화번호를 입력해주세요"); string phoneNo = Console.ReadLine();
 
                 ReservationInfos[reservedNumber].reservationInfoDetail.Add(new ReservationInfoDetail(passport, name, phoneNo, seatWantList[i][0] + "-" + seatWantList[i][1]));
                 AirplaneSchedules[wantThisSchedule].SeatList[int.Parse(seatWantList[i][0]) - 1, int.Parse(seatWantList[i][1]) - 1] = 1;

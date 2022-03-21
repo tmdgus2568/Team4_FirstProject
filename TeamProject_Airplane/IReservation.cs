@@ -8,7 +8,7 @@ namespace TeamProject_Airplane
 {
     interface IReservation
     {
-        void addReservation(AirplaneSchedule airplaneSchedule);
+        void addReservation();
         void checkReservation(string reservationNo);
         void editReservation(string reservationNo);
         void cancelReservation(string reservationNo);

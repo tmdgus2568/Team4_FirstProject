@@ -19,9 +19,6 @@ namespace TeamProject_Airplane
     {
         public string ID { get; }
         public string Password { get; }
-        public string Name { get; }
-        public string PhoneNo { get; }
-        public string Email { get; }
 
         private List<string> dateHourly; //시간별 48시간 list
         private List<string> weatherHourly; // 시간별 날씨
@@ -35,37 +32,13 @@ namespace TeamProject_Airplane
         public Dictionary<string, AirplaneSchedule> airplaneSchedules; //key: 비행기번호
         [NonSerialized]
         public Dictionary<string, ReservationInfo> reservationInfos;
-        //private Dictionary<string, Hashtable> schedules; // 전체 스케쥴 일정들?
 
-
-        public Manager()
-        {
-            this.dateHourly = new List<string>(); //시간별 48시간 list
-            this.weatherHourly = new List<string>(); // 시간별 날씨
-            this.visibilityHourly = new List<string>(); // 시간별 가시성 wind_deg
-            this.windDegHourly = new List<string>(); // 시간별 돌풍
-            this.dateDaily = new List<string>(); //일자별 7일 list
-            this.weatherDaily = new List<string>(); // 일자별 날씨
-            this.uviDaily = new List<string>(); // 일자별 가시성 wind_deg
-            this.windDegDaily = new List<string>(); // 일자별 돌풍
-            //this.airplaneSchedules = new Dictionary<string, AirplaneSchedule>();//key 비행기번호 // 
-            //this.schedules = new Dictionary<string, Hashtable>();
-        }
-        public Manager(string id, string pw, string name, string phoneNo, string email)
-        {
-            this.ID = id;
-            this.Password = pw;
-            this.Name = name;
-            this.PhoneNo = phoneNo;
-            this.Email = email;
-        }
-
-        public Manager(string id, string password, Dictionary<string, AirplaneSchedule> airplaneSchedules)
+        public Manager(string id, string password, Dictionary<string, AirplaneSchedule> airplaneSchedules, Dictionary<string, ReservationInfo> reservationInfos)
         {
             this.ID = id;
             this.Password = password;
             this.airplaneSchedules = airplaneSchedules; //, Dictionary<string, AirplaneSchedule> airplaneSchedules
-
+            this.reservationInfos = reservationInfos;
             this.dateHourly = new List<string>(); //시간별 48시간 list
             this.weatherHourly = new List<string>(); // 시간별 날씨
             this.visibilityHourly = new List<string>(); // 시간별 가시성 wind_deg
@@ -74,8 +47,6 @@ namespace TeamProject_Airplane
             this.weatherDaily = new List<string>(); // 일자별 날씨
             this.uviDaily = new List<string>(); // 일자별 가시성 wind_deg
             this.windDegDaily = new List<string>(); // 일자별 돌풍
-            //this.airplaneSchedules = new Dictionary<string, AirplaneSchedule>();//key 비행기번호 // 
-            //this.schedules = new Dictionary<string, Hashtable>();
 
         }
 
@@ -135,7 +106,7 @@ namespace TeamProject_Airplane
                             foreach (var itemDay in resultDay) { matchEtaDay = itemDay.ToString(); }
                             foreach (var itemHour in resultHour) { matchEtaHour = itemHour.ToString(); }
 
-                            if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && j.ToString() == matchEtaHour)
+                            if (DateTime.Now.AddDays(i).ToString("yy/MM/dd") == matchEtaDay && string.Format("{0:D2}", j) == matchEtaHour)
                             {
                                 Console.Write($"//비행기 번호: {item.Value.AirplanceNo}  출발예정시간:{item.Value.TakeOffTime}  도착예정시간:{item.Value.Eta}  출발예정시간:{item.Value.TakeOffTime}  목적지:{item.Value.DestinationPoint}  기준가격:{item.Value.PriceInfo}  기장:{item.Value.CaptainInfo.Name}  부기장:{item.Value.CoCaptainInfo.Name}//");
                             }
@@ -198,14 +169,6 @@ namespace TeamProject_Airplane
             {
                 Console.WriteLine("이미 배치되어 있는 비행기입니다.");
             }
-
-            foreach (var item in airplaneSchedules)// 출력 테스트
-            {
-                Console.WriteLine($"비행기 넘버 딕셔너리 키: {item.Key} 비행기 넘버 {item.Value.AirplanceNo} 이륙시간:{item.Value.TakeOffTime} 이륙시간:{item.Value.Eta} 목적지:{item.Value.DestinationPoint} 가격정보{item.Value.PriceInfo} 캡틴: { item.Value.CaptainInfo.Name} 캡틴이메일: { item.Value.CaptainInfo.Email}부기장{ item.Value.CoCaptainInfo.Name} 부기장{ item.Value.CoCaptainInfo.Email}");
-
-            }
-
-
         }
 
 
@@ -296,11 +259,7 @@ namespace TeamProject_Airplane
             {
                 Console.WriteLine("해당하는 비행기 번호는 존재하지 않습니다.");
             }
-            foreach (var item in airplaneSchedules)// 출력 테스트
-            {
-                Console.WriteLine($"비행기 넘버 딕셔너리 키: {item.Key} 비행기 넘버 {item.Value.AirplanceNo} 이륙시간:{item.Value.TakeOffTime} 이륙시간:{item.Value.Eta} 목적지:{item.Value.DestinationPoint} 가격정보{item.Value.PriceInfo} 캡틴: { item.Value.CaptainInfo.Name} 캡틴이메일: { item.Value.CaptainInfo.Email}부기장{ item.Value.CoCaptainInfo.Name} 부기장{ item.Value.CoCaptainInfo.Email}");
 
-            }
         }
 
 
@@ -313,20 +272,25 @@ namespace TeamProject_Airplane
 
             Console.Write("삭제하실 비행기 번호를 입력해주세요.:");
             string deleteTarget = Console.ReadLine(); //airplaneNo
-           // string airplaneNo = this.reservationInfos[deleteTarget]
+                                                      // string airplaneNo = this.reservationInfos[deleteTarget]
 
             if (this.airplaneSchedules.ContainsKey(deleteTarget))
             {
                 Console.Write("해당 비행기 일정이 삭제되었습니다.");
+
+                foreach (var item in this.reservationInfos.Values.ToList())
+                {
+                    if (item.airplaneSchedule.AirplanceNo == deleteTarget)
+                    {
+                        reservationInfos.Remove(item.reservationNo);
+                    }
+                }
                 this.airplaneSchedules.Remove(deleteTarget);
-                //this.reservationInfos.Remove();
-                
             }
             else
             {
                 Console.Write("해당하는 비행기 번호는 존재하지 않습니다.");
             }
-            Console.WriteLine(this.airplaneSchedules.ContainsKey(deleteTarget));
         }
 
 
@@ -458,16 +422,6 @@ namespace TeamProject_Airplane
                     }
                     response.Close();
                 }
-
-                /*                    for (int i = 0; i < dateHourly.Count; i++) // 시간별 테스트
-                                    {
-                                        Console.WriteLine($"시간 : {dateHourly[i]} 날씨 : {weatherHourly[i]} 가시성 : {visibilityHourly[i]} 돌풍 지수 : {windDegHourly[i]}");
-                                    }
-
-                                    for (int i = 0; i < dateDaily.Count; i++) // 날짜별 테스트
-                                    {
-                                        Console.WriteLine($"시간 : {dateDaily[i]} 날씨 : {weatherDaily[i]} 자외선 지수 : {uviDaily[i]} 돌풍 지수 : {windDegDaily[i]}");
-                                    }*/
             }
             catch (Exception e)
             {

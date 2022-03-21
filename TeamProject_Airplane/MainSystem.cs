@@ -168,7 +168,7 @@ namespace TeamProject_Airplane
                 switch (input)
                 {
                     case 1:
-                        member.addReservation(null);
+                        member.addReservation();
                         break;
                     case 2:
                         member.checkReservation(null);
@@ -206,25 +206,26 @@ namespace TeamProject_Airplane
             string input;
             string reservationNo;
 
-            NonMember nonMember = new NonMember(this.reservationInfos);
+            NonMember nonMember = new NonMember(this.reservationInfos, this.airplaneSchedules);
 
             while ((input = Console.ReadLine()) != "0")
             {
                 switch (input)
                 {
                     case "1": //운행스케줄 번호를 넣으면 어떤 검증절차로 원하는 운행스케줄을 가져오는지..?
-                        Console.Write("원하시는 일정의 비행기번호를 입력해 주세요 : ");
-                        string airplaneNo = Console.ReadLine();
-                      
-                        if (this.airplaneSchedules.ContainsKey(airplaneNo))
-                        {
-                            nonMember.addReservation(this.airplaneSchedules[airplaneNo]);
+                        //Console.Write("원하시는 일정의 비행기번호를 입력해 주세요 : ");
+                        //string airplaneNo = Console.ReadLine();
+                        nonMember.addReservation();
+                        
+                       // if (this.airplaneSchedules.ContainsKey(airplaneNo))
+                        //{
+                            //nonMember.addReservation();
                             //전체 운행스케줄 + 예약정보 전체를 넘겨줌(dictionary
-                        }
-                        else
-                        {
-                            Console.WriteLine("[알림] 없는 번호입니다.");
-                        }
+                        //}
+                        //else
+                        //{
+                           // Console.WriteLine("[알림] 없는 번호입니다.");
+                        //}
                         break;
                     case "2":
                         reservationNo = checkReservationNo();
@@ -261,7 +262,7 @@ namespace TeamProject_Airplane
             return Console.ReadLine();
         }
 
-        public void checkSchedule() // 비행기 일정표 확인 (고객용)
+                public void checkSchedule() // 비행기 일정표 확인 (고객용)
         {
             Console.WriteLine("###############################################현재 비행기 일정###############################################");
             Regex regDay = new Regex(@"(\d\d)-(\d\d)-(\d\d)");
@@ -550,7 +551,7 @@ namespace TeamProject_Airplane
             else
             {
                 this.managers = new Dictionary<string, Manager>();
-                this.managers.Add("admin", new Manager("admin", "1234", this.airplaneSchedules));
+                this.managers.Add("admin", new Manager("admin", "1234", this.airplaneSchedules, this.reservationInfos));
                 Console.WriteLine(this.airplaneSchedules.Count);
             }
         }

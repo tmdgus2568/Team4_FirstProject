@@ -45,7 +45,7 @@ namespace TeamProject_Airplane
 
         }
 
-        public void addReservation(AirplaneSchedule airplaneSchedule)
+        public void addReservation()
         {
             //비행기 먼저 골라야됨
             Console.WriteLine("현재 비행기 일정 목록");
@@ -90,7 +90,6 @@ namespace TeamProject_Airplane
             List<ReservationInfoDetail> reservedList = new List<ReservationInfoDetail>(); //출력 때도 쓸 reservationInfoDetail 새 리스트
                                                                                           //먼저 당사자꺼
             reservedList.Add(new ReservationInfoDetail(this.PassportNo, this.Name, this.PhoneNo, seatWantList[0][0] + "-" + seatWantList[0][1])); // 주의체크
-
             //예매번호
             ReservationInfo reservationInfo = new ReservationInfo(count, this, reservedList, AirplaneSchedules[wantThisSchedule]);
             ReservationInfos.Add(reservationInfo.reservationNo, reservationInfo);
@@ -133,8 +132,6 @@ namespace TeamProject_Airplane
             }
 
             this.Point += (int)mile;
-
-            //++countForReservedNumber;
         }
 
 
@@ -175,7 +172,6 @@ namespace TeamProject_Airplane
                 for (int i = 0; i < count; i++)
                 {
                     Console.WriteLine("입력");
-                    //int temp = int.Parse(Console.ReadLine());
                     string temp = Console.ReadLine();
                     changelist.Add(temp);
                 }
@@ -216,7 +212,6 @@ namespace TeamProject_Airplane
                             break;
                         }
                     }
-                    ////////////////여기 고쳐야됨////////////////
                     AirplaneSchedules[ReservationInfos[reservedNo].airplaneSchedule.AirplanceNo].SeatList[int.Parse(erasedSeatNo[0]) - 1, int.Parse(erasedSeatNo[1]) - 1] = 0;
 
                     //새 기록 추가
@@ -292,7 +287,7 @@ namespace TeamProject_Airplane
                 //Console.WriteLine(item.SeatType);
                 Console.WriteLine($"탑승자 여권번호 : {item.PassportNo}");
                 Console.WriteLine($"탑승자 이름 : {item.Name}");
-                Console.WriteLine($"탑승자 연락처 : {item.Name}");
+                Console.WriteLine($"탑승자 연락처 : {item.PhoneNo}");
             }
         }
 

@@ -58,7 +58,9 @@ namespace TeamProject_Airplane
                 sb.Append($"탑승자 여권번호 : {item.PassportNo}\n");
                 sb.Append($"탑승자 이름 : {item.Name}\n");
                 sb.Append($"탑승자 연락처 : {item.PhoneNo}\n");
+                
             }
+            sb.Append($"예매번호 : {this.reservationNo}")
         
             return sb.ToString();
         }
